@@ -1,7 +1,7 @@
 .loader {
   width: 48px;
   height: 48px;
-  display: none;
+  display: block;
   margin: 0 auto;
   position: relative;
   border-width: 3px 2px 3px 2px;

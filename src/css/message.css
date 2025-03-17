@@ -14,6 +14,9 @@
   font-weight: 500;
   margin-bottom: 12px;
 }
+.message.iziToast > .iziToast-body .iziToast-message {
+  line-height: 1.5;
+}
 .message.iziToast > button.iziToast-close {
   background-size: 16px;
 }

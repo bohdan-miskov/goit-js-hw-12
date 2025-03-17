@@ -1,0 +1,72 @@
+.form {
+  margin-bottom: 32px;
+  font-weight: 500;
+  text-align: center;
+}
+.form input {
+  width: 272px;
+  height: 40px;
+  border: 1px solid #808080;
+  border-radius: 4px;
+  padding: 8px 16px;
+  outline: none;
+  transition: border-color, 200ms ease-in;
+}
+.form input::placeholder {
+  color: #808080;
+}
+.form input:is(:hover, :focus) {
+  border-color: #000;
+}
+.form input:active {
+  border-color: #4e75ff;
+}
+.form button {
+  min-width: 91px;
+  height: 40px;
+  margin-left: 8px;
+  background-color: #4e75ff;
+  border-radius: 8px;
+  padding: 8px 16px;
+  color: #fff;
+  border: none;
+  transition: background-color, 200ms, ease-in;
+}
+.form button:is(:hover, :focus) {
+  background-color: #6c8cff;
+}
+.gallery {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.gallery-item {
+  border: 1px solid #808080;
+  width: 360px;
+  position: relative;
+}
+.gallery-image {
+  width: 100%;
+}
+.gallery-image-description-list {
+  position: absolute;
+  bottom: 0;
+  padding: 4px 20px;
+  display: flex;
+  gap: 28px;
+  justify-content: center;
+  background-color: #fff;
+  width: 100%;
+}
+.gallery-image-description-item {
+  font-size: 12px;
+  text-align: center;
+}
+.gallery-image-description-title {
+  font-weight: 600;
+  line-height: 1.33333;
+}
+.gallery-image-description-text {
+  line-height: 2;
+}

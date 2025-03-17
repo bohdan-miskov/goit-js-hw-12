@@ -1,10 +1,11 @@
 import axios from 'axios';
 
-export default function imageAPIRequest(imageName) {
+export default function imageAPIRequest(imageName, page = 1) {
   return axios.get('https://pixabay.com/api/', {
     params: {
-      q: imageName,
       ...searchParams,
+      q: imageName,
+      page,
     },
   });
 }
@@ -14,4 +15,5 @@ const searchParams = {
   image_type: 'photo',
   orientation: 'horizontal',
   safesearch: 'true',
+  per_page: '15',
 };

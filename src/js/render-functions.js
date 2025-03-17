@@ -30,7 +30,7 @@ export default function updateImageMarkup(images) {
         </ul>
       </li>`;
   });
-  refs.gallery.innerHTML = imagesMarkup.join('');
+  refs.gallery.insertAdjacentHTML('beforeend', imagesMarkup.join(''));
   modalGallery.refresh();
 }
 

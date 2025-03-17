@@ -38,3 +38,7 @@ button {
   letter-spacing: inherit;
   color: inherit;
 }
+
+.hidden {
+  display: none !important;
+}

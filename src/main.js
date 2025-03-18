@@ -71,7 +71,6 @@ async function searchFormSubmit(event) {
   refs.loader.classList.add('hidden');
   page = 2;
   if (totalPages <= 1) {
-    console.log(iziToast);
     iziToast.info({
       ...infoMessageOptions,
       message: "We're sorry, but you've reached the end of search results.",
@@ -126,5 +125,4 @@ function scrollAfterLoad() {
     top: itemHeight * 2,
     behavior: 'smooth',
   });
-  console.log(window);
 }

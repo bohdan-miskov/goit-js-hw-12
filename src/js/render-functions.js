@@ -2,6 +2,15 @@ import SimpleLightbox from 'simplelightbox';
 
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
+const modalGallery = new SimpleLightbox('.gallery-link', {
+  captionsData: 'data-user',
+  captionDelay: 250,
+});
+
+const refs = {
+  gallery: document.querySelector('.gallery'),
+};
+
 export default function updateImageMarkup(images) {
   const imagesMarkup = images.map(image => {
     return `<li class="gallery-item">
@@ -34,11 +43,6 @@ export default function updateImageMarkup(images) {
   modalGallery.refresh();
 }
 
-const modalGallery = new SimpleLightbox('.gallery-link', {
-  captionsData: 'data-user',
-  captionDelay: 250,
-});
-
-const refs = {
-  gallery: document.querySelector('.gallery'),
-};
+export function clearGallery() {
+  refs.gallery.innerHTML = '';
+}

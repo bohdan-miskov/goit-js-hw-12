@@ -4,6 +4,8 @@ import 'izitoast/dist/css/iziToast.min.css';
 import imageAPIRequest from './js/pixabay-api';
 import imageRender from './js/render-functions';
 
+import { clearGallery } from './js/render-functions';
+
 const messageOptions = {
   class: 'message',
   titleColor: '#fff',
@@ -48,20 +50,22 @@ async function searchFormSubmit(event) {
   if (!textValidation(searchText)) {
     return;
   }
-  refs.gallery.innerHTML = '';
+
+  clearGallery();
   refs.galleryLoadBtn.classList.add('hidden');
   refs.loader.classList.remove('hidden');
   try {
-    const response = await imageAPIRequest(searchText);
-    if (response.data.hits.length === 0) {
+    const imageData = await imageAPIRequest(searchText);
+    if (imageData.hits.length === 0) {
       createErrorMessage(
         '',
         'Sorry, there are no images matching your search query. Please try again!'
       );
+      refs.loader.classList.add('hidden');
       return;
     }
-    totalPages = Math.ceil(response.data.totalHits / 15);
-    imageRender(response.data.hits);
+    totalPages = Math.ceil(imageData.totalHits / 15);
+    imageRender(imageData.hits);
   } catch (error) {
     createErrorMessage(
       error.name,
@@ -84,8 +88,8 @@ async function loadMore() {
   refs.galleryLoadBtn.classList.add('hidden');
   refs.loader.classList.remove('hidden');
   try {
-    const response = await imageAPIRequest(searchText, page);
-    imageRender(response.data.hits);
+    const imageData = await imageAPIRequest(searchText, page);
+    imageRender(imageData.hits);
   } catch (error) {
     createErrorMessage(
       error.name,

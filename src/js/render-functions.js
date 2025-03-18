@@ -9,7 +9,7 @@ export default function updateImageMarkup(images) {
           image.largeImageURL
         }"><img class="gallery-image" src="${image.webformatURL}" alt="${
       image.tags
-    }" width="${300}" height="${200}" data-user="${image.user}"></a>
+    }" width="${360}" height="${200}" data-user="${image.user}"></a>
         <ul class="gallery-image-description-list">
             <li class="gallery-image-description-item">
                 <h3 class="gallery-image-description-title">Likes</h3>

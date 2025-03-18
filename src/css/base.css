@@ -17,6 +17,7 @@
 }
 
 body {
+  scroll-behavior: smooth;
   display: flex;
   flex-direction: column;
   min-width: 100vw;

@@ -42,7 +42,7 @@ let searchText;
 refs.searchForm.addEventListener('submit', searchFormSubmit);
 refs.galleryLoadBtn.addEventListener('click', loadMore);
 
-function searchFormSubmit(event) {
+async function searchFormSubmit(event) {
   event.preventDefault();
   searchText = event.currentTarget.elements.searchText.value.trim();
   if (!textValidation(searchText)) {
@@ -50,63 +50,60 @@ function searchFormSubmit(event) {
   }
   refs.gallery.innerHTML = '';
   refs.loader.classList.remove('hidden');
-  imageAPIRequest(searchText)
-    .then(imageData => {
-      if (imageData.data.hits.length === 0) {
-        createErrorMessage(
-          '',
-          'Sorry, there are no images matching your search query. Please try again!'
-        );
-        return;
-      }
-      imageRender(imageData.data.hits);
-      totalPages = Math.ceil(imageData.data.totalHits / 15);
-      page = 2;
-      if (totalPages <= 1) {
-        console.log(iziToast);
-        iziToast.info({
-          ...infoMessageOptions,
-          message: "We're sorry, but you've reached the end of search results.",
-        });
-        return;
-      }
-      refs.galleryLoadBtn.classList.remove('hidden');
-    })
-    .catch(error => {
+  try {
+    const response = await imageAPIRequest(searchText);
+    if (response.data.hits.length === 0) {
       createErrorMessage(
-        error.name,
-        `Sorry, the following error occured: ${error.message}`
+        '',
+        'Sorry, there are no images matching your search query. Please try again!'
       );
-    })
-    .finally(() => refs.loader.classList.add('hidden'));
+      return;
+    }
+    totalPages = Math.ceil(response.data.totalHits / 15);
+    imageRender(response.data.hits);
+  } catch (error) {
+    createErrorMessage(
+      error.name,
+      `Sorry, the following error occured: ${error.message}`
+    );
+  }
+  refs.loader.classList.add('hidden');
+  page = 2;
+  if (totalPages <= 1) {
+    console.log(iziToast);
+    iziToast.info({
+      ...infoMessageOptions,
+      message: "We're sorry, but you've reached the end of search results.",
+    });
+    return;
+  }
+  refs.galleryLoadBtn.classList.remove('hidden');
 }
 
-function loadMore() {
+async function loadMore() {
   refs.galleryLoadBtn.classList.add('hidden');
   refs.loader.classList.remove('hidden');
-  imageAPIRequest(searchText, page)
-    .then(imageData => {
-      imageRender(imageData.data.hits);
-    })
-    .catch(error => {
-      createErrorMessage(
-        error.name,
-        `Sorry, the following error occured: ${error.message}`
-      );
-    })
-    .finally(() => {
-      refs.loader.classList.add('hidden');
-      page++;
-      if (page > totalPages) {
-        page = 2;
-        iziToast.info({
-          ...infoMessageOptions,
-          message: "We're sorry, but you've reached the end of search results.",
-        });
-        return;
-      }
-      refs.galleryLoadBtn.classList.remove('hidden');
+  try {
+    const response = await imageAPIRequest(searchText, page);
+    imageRender(response.data.hits);
+  } catch (error) {
+    createErrorMessage(
+      error.name,
+      `Sorry, the following error occured: ${error.message}`
+    );
+  }
+  refs.loader.classList.add('hidden');
+  scrollAfterLoad();
+  page++;
+  if (page > totalPages) {
+    page = 2;
+    iziToast.info({
+      ...infoMessageOptions,
+      message: "We're sorry, but you've reached the end of search results.",
     });
+    return;
+  }
+  refs.galleryLoadBtn.classList.remove('hidden');
 }
 
 function textValidation(text) {
@@ -119,4 +116,14 @@ function createErrorMessage(title, message) {
     title,
     message,
   });
+}
+
+function scrollAfterLoad() {
+  const galleryItem = refs.gallery.querySelector('.gallery-item');
+  const itemHeight = galleryItem.getBoundingClientRect().height;
+  window.scrollBy({
+    top: itemHeight * 2,
+    behavior: 'smooth',
+  });
+  console.log(window);
 }

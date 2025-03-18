@@ -44,6 +44,7 @@ refs.galleryLoadBtn.addEventListener('click', loadMore);
 
 async function searchFormSubmit(event) {
   event.preventDefault();
+  refs.galleryLoadBtn.classList.add('hidden');
   searchText = event.currentTarget.elements.searchText.value.trim();
   if (!textValidation(searchText)) {
     return;

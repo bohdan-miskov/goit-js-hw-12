@@ -50,68 +50,57 @@ async function searchFormSubmit(event) {
   if (!textValidation(searchText)) {
     return;
   }
-
   clearGallery();
-  refs.galleryLoadBtn.classList.add('hidden');
-  refs.loader.classList.remove('hidden');
-  try {
-    const imageData = await imageAPIRequest(searchText);
-    if (imageData.hits.length === 0) {
-      createErrorMessage(
-        '',
-        'Sorry, there are no images matching your search query. Please try again!'
-      );
-      refs.loader.classList.add('hidden');
-      return;
-    }
-    totalPages = Math.ceil(imageData.totalHits / 15);
-    imageRender(imageData.hits);
-  } catch (error) {
-    createErrorMessage(
-      error.name,
-      `Sorry, the following error occured: ${error.message}`
-    );
-  }
-  refs.loader.classList.add('hidden');
+  refs.searchForm.reset();
+  const imageData = await galleryLoading();
+  if (!imageData) return;
+  totalPages = Math.ceil(imageData.totalHits / 15);
   page = 2;
   if (totalPages <= 1) {
-    iziToast.info({
-      ...infoMessageOptions,
-      message: "We're sorry, but you've reached the end of search results.",
-    });
+    showEndOfGalleryMessage();
     return;
   }
   refs.galleryLoadBtn.classList.remove('hidden');
 }
 
 async function loadMore() {
+  const imageData = await galleryLoading(page);
+  if (!imageData) return;
+  scrollAfterLoad();
+  page++;
+  if (page > totalPages) {
+    page = 2;
+    showEndOfGalleryMessage();
+    return;
+  }
+  refs.galleryLoadBtn.classList.remove('hidden');
+}
+async function galleryLoading(page = 1) {
   refs.galleryLoadBtn.classList.add('hidden');
   refs.loader.classList.remove('hidden');
+  let imageData;
   try {
-    const imageData = await imageAPIRequest(searchText, page);
+    imageData = await imageAPIRequest(searchText, page);
+    if (imageData.hits.length === 0) {
+      createErrorMessage(
+        '',
+        'Sorry, there are no images matching your search query. Please try again!'
+      );
+      return;
+    }
     imageRender(imageData.hits);
   } catch (error) {
     createErrorMessage(
       error.name,
       `Sorry, the following error occured: ${error.message}`
     );
+  } finally {
+    refs.loader.classList.add('hidden');
   }
-  refs.loader.classList.add('hidden');
-  scrollAfterLoad();
-  page++;
-  if (page > totalPages) {
-    page = 2;
-    iziToast.info({
-      ...infoMessageOptions,
-      message: "We're sorry, but you've reached the end of search results.",
-    });
-    return;
-  }
-  refs.galleryLoadBtn.classList.remove('hidden');
+  return imageData;
 }
-
 function textValidation(text) {
-  return text !== '' ? true : false;
+  return text !== '';
 }
 
 function createErrorMessage(title, message) {
@@ -128,5 +117,12 @@ function scrollAfterLoad() {
   window.scrollBy({
     top: itemHeight * 2,
     behavior: 'smooth',
+  });
+}
+
+function showEndOfGalleryMessage() {
+  iziToast.info({
+    ...infoMessageOptions,
+    message: "We're sorry, but you've reached the end of search results.",
   });
 }

@@ -44,12 +44,12 @@ refs.galleryLoadBtn.addEventListener('click', loadMore);
 
 async function searchFormSubmit(event) {
   event.preventDefault();
-  refs.galleryLoadBtn.classList.add('hidden');
   searchText = event.currentTarget.elements.searchText.value.trim();
   if (!textValidation(searchText)) {
     return;
   }
   refs.gallery.innerHTML = '';
+  refs.galleryLoadBtn.classList.add('hidden');
   refs.loader.classList.remove('hidden');
   try {
     const response = await imageAPIRequest(searchText);

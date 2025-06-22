@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const searchParams = {
-  key: '',
+  key: import.meta.env.VITE_API_KEY,
   image_type: 'photo',
   orientation: 'horizontal',
   safesearch: 'true',

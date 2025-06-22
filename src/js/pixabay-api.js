@@ -16,6 +16,5 @@ export default async function imageAPIRequest(imageName, page = 1) {
       page,
     },
   });
-
   return response.data;
 }
